@@ -6,15 +6,15 @@
   
   <title>CUDA | ao006&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="线程结构![[&#x2F;images&#x2F;Pasted image 20250302140727.png]]  kernel:在GPU上运行的特殊函数,从主机（CPU）调用Kernel时，它在GPU上启动，并在许多线程上并行运行。 grid:block的一个集合 block:每个block内部包含了许多线程 thread:每个线程是Kernel的单个执行实例。在一个block中的所有线程可">
+  <meta name="description" content="线程结构![](&#x2F;images&#x2F;Pasted image 20250302140727.png)  kernel:在GPU上运行的特殊函数,从主机（CPU）调用Kernel时，它在GPU上启动，并在许多线程上并行运行。 grid:block的一个集合 block:每个block内部包含了许多线程 thread:每个线程是Kernel的单个执行实例。在一个block中的所有线程可">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CUDA">
 <meta property="og:url" content="http://example.com/2025/04/22/cuda/index.html">
 <meta property="og:site_name" content="ao006&#39;s Blog">
-<meta property="og:description" content="线程结构![[&#x2F;images&#x2F;Pasted image 20250302140727.png]]  kernel:在GPU上运行的特殊函数,从主机（CPU）调用Kernel时，它在GPU上启动，并在许多线程上并行运行。 grid:block的一个集合 block:每个block内部包含了许多线程 thread:每个线程是Kernel的单个执行实例。在一个block中的所有线程可">
+<meta property="og:description" content="线程结构![](&#x2F;images&#x2F;Pasted image 20250302140727.png)  kernel:在GPU上运行的特殊函数,从主机（CPU）调用Kernel时，它在GPU上启动，并在许多线程上并行运行。 grid:block的一个集合 block:每个block内部包含了许多线程 thread:每个线程是Kernel的单个执行实例。在一个block中的所有线程可">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-22T11:27:58.260Z">
-<meta property="article:modified_time" content="2025-12-14T14:40:58.677Z">
+<meta property="article:modified_time" content="2025-12-14T14:52:05.598Z">
 <meta property="article:author" content="ao006">
 <meta name="twitter:card" content="summary">
   
@@ -95,7 +95,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="线程结构"><a href="#线程结构" class="headerlink" title="线程结构"></a>线程结构</h2><p>![[&#x2F;images&#x2F;Pasted image 20250302140727.png]]</p>
+        <h2 id="线程结构"><a href="#线程结构" class="headerlink" title="线程结构"></a>线程结构</h2><p>![](&#x2F;images&#x2F;Pasted image 20250302140727.png)</p>
 <ol>
 <li>kernel:在GPU上运行的特殊函数,从主机（CPU）调用Kernel时，它在GPU上启动，并在许多线程上并行运行。</li>
 <li>grid:block的一个集合</li>
@@ -110,7 +110,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>![[&#x2F;images&#x2F;Unknown 2.jpg]]<br>    修饰变量放在<strong>共享内存</strong>：<code>_shared_</code>,访问共享内存需同步调用<code>void _syncthreads();</code><br>    SM中的一级缓存和共享内存都是用64KB的片上内存，通过静态划分，在运行时可以通过如下指令进行动态分配：<br><code>cudaError_t cudaFuncSetCacheConfig(const void* func, cudaFuncCache cacheConfig);</code><br>     <strong>常量内存</strong>用如下修饰符来修饰：__ constant   __ ，核函数只能从常量内存中读取数据。因此，常量内存必须在主机端使用下面的函数来初始化：<br><code>cudaError_t cudaMemcpyToSymbol(const void* symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice);</code><br>     一个<strong>全局内存变量</strong>可以被静态声明或动态声明。使用如下修饰符：<br><code>__device__</code><br>    **全局内存适合存储大量的、所有线程都可能用到但访问不频繁的数据；共享内存适合线程块内线程间频繁交换和共享的数据 **</p>
+<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>![](&#x2F;images&#x2F;Unknown 2.jpg)<br>    修饰变量放在<strong>共享内存</strong>：<code>_shared_</code>,访问共享内存需同步调用<code>void _syncthreads();</code><br>    SM中的一级缓存和共享内存都是用64KB的片上内存，通过静态划分，在运行时可以通过如下指令进行动态分配：<br><code>cudaError_t cudaFuncSetCacheConfig(const void* func, cudaFuncCache cacheConfig);</code><br>     <strong>常量内存</strong>用如下修饰符来修饰：__ constant   __ ，核函数只能从常量内存中读取数据。因此，常量内存必须在主机端使用下面的函数来初始化：<br><code>cudaError_t cudaMemcpyToSymbol(const void* symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice);</code><br>     一个<strong>全局内存变量</strong>可以被静态声明或动态声明。使用如下修饰符：<br><code>__device__</code><br>    **全局内存适合存储大量的、所有线程都可能用到但访问不频繁的数据；共享内存适合线程块内线程间频繁交换和共享的数据 **</p>
 <h2 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h2><ol>
 <li>分配host内存，并进行数据初始化；</li>
 <li>分配device内存，并从host将数据拷贝到device上；</li>
@@ -173,7 +173,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2025/04/22/cuda/" data-id="cuidRU_vv4s9r9T43MbYTxzTZ" data-title="CUDA" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="http://example.com/2025/04/22/cuda/" data-id="cuid50XJudHpnYeCFiX0in6Or" data-title="CUDA" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -187,7 +187,7 @@
       <strong class="article-nav-caption">前一篇</strong>
       <div class="article-nav-title">
         
-          (no title)
+          向量化
         
       </div>
     </a>
@@ -232,7 +232,7 @@
           </li>
         
           <li>
-            <a href="/2025/06/22/%E5%90%91%E9%87%8F%E5%8C%96/">(no title)</a>
+            <a href="/2025/06/22/%E5%90%91%E9%87%8F%E5%8C%96/">向量化</a>
           </li>
         
           <li>
